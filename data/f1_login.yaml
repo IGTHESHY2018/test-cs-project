@@ -1,0 +1,159 @@
+# =========================================================
+# F1 登录用例（10 条）
+# 对应 Excel：PRD/F1-身份与访问控制-测试用例.xlsx F1-ZZ-001 ~ F1-ZZ-010
+# 对应测试脚本：testcase/test_f1_login.py
+#
+# 字段约定：
+#   id          用例编号（与 Excel 一致）
+#   title       功能标题（人在 allure 报告里读）
+#   priority    P0 / P1 / P2
+#   auth        角色约定："none"=不带 Token、"user"=用户Token、"admin"=管理员Token
+#                   登录接口 @IgnoreAuth，全部填 "none"
+#   action      要测的动作（test_f1_login.py 据此分发）
+#               "login" = 调用 yonghu_api.login 或 users_api.login
+#   params      登录参数（query string 传）
+#   expect      期望结果
+#       code        期望 R.code（0 成功 / 500 业务失败 / 401 未登录 / etc）
+#       has_token   响应里是否有 token 字段（true/false/省略=不校验）
+#       note        用例类型（正向/边界/异常）
+# =========================================================
+
+cases:
+  # ---- F1-ZZ-001 用户登录-正向 ----
+  - id: F1-ZZ-001
+    title: 用户登录-正向
+    priority: P0
+    auth: none
+    action: login
+    api: yonghu
+    params:
+      username: "123"
+      password: "123"
+    expect:
+      code: 0
+      has_token: true
+      note: 正向
+
+  # ---- F1-ZZ-002 用户登录-只输入用户名没密码 ----
+  - id: F1-ZZ-002
+    title: 用户登录-只输入用户名没密码
+    priority: P1
+    auth: none
+    action: login
+    api: yonghu
+    params:
+      username: "123"
+      # 不传 password
+    expect:
+      code: 500
+      msg_contains: "账号或密码不正确"
+      note: 异常
+
+  # ---- F1-ZZ-003 用户登录-只输入密码没用户名 ----
+  - id: F1-ZZ-003
+    title: 用户登录-只输入密码没用户名
+    priority: P1
+    auth: none
+    action: login
+    api: yonghu
+    params:
+      password: "123"
+      # 不传 username
+    expect:
+      code: 500
+      msg_contains: "账号或密码不正确"
+      note: 异常
+
+  # ---- TODO 以下留给用户照搬 ----
+  # F1-ZZ-004 用户登录-超长密码（password 用 64 个字符，足够测"后端不拦截长度"边界）
+  - id: F1-ZZ-004
+    title: 用户登录-超长密码
+    priority: P1
+    auth: none
+    action: login
+    api: yonghu
+    params:
+      username: "123"
+      password: "aB34567890123456789012345678901234567890123456789012345678901234"
+    expect:
+      code: 500
+      msg_contains: "账号或密码不正确"
+      note: 边界
+
+  # F1-ZZ-005 用户登录-正确用户名错误密码（username: "123", password: "wrong"）
+  - id: F1-ZZ-005
+    title: "用户登录-正确用户名错误密码（username: 123, password: wrong）"
+    priority: P1
+    auth: none
+    action: login
+    api: yonghu
+    params:
+      username: "123"
+      password: "wrong"
+      # 不传 username
+    expect:
+      code: 500
+      msg_contains: "账号或密码不正确"
+      note: 异常
+
+  # F1-ZZ-006 管理员登录-正向（api: users, username: "abo", password: "abo"）
+  - id: F1-ZZ-006
+    title: 管理员登录-正向
+    priority: P1
+    auth: none
+    action: login
+    api: users
+    params:
+      username: "abo"
+      password: "abo"
+    expect:
+      code: 0
+      has_token: true
+      note: 正向
+  
+  # F1-ZZ-007 管理员登录-只输用户名没密码（api: users, username: "abo"）
+  - id: F1-ZZ-007
+    title: 管理员登录-只输用户名没密码
+    priority: P1
+    auth: none
+    action: login
+    api: users
+    params:
+      username: "abo"
+      # 不传 username
+    expect:
+      code: 500
+      msg_contains: "账号或密码不正确"
+      note: 异常
+  
+  # F1-ZZ-008 管理员登录-只输密码没用户名（api: users, password: "abo"）
+  - id: F1-ZZ-008
+    title: 管理员登录-只输密码没用户名
+    priority: P1
+    auth: none
+    action: login
+    api: users
+    params:
+      password: "abo"
+      # 不传 username
+    expect:
+      code: 500
+      msg_contains: "账号或密码不正确"
+      note: 异常
+  
+  # F1-ZZ-009 管理员登录-正确用户名错误密码（api: users, username: "abo", password: "wrong"）
+  - id: F1-ZZ-009
+    title: 管理员登录-正确用户名错误密码
+    priority: P1
+    auth: none
+    action: login
+    api: users
+    params:
+      username: "abo"
+      password: "wrong123"
+      # 不传 username
+    expect:
+      code: 500
+      msg_contains: "账号或密码不正确"
+      note: 异常
+  

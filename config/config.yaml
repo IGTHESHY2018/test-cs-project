@@ -1,0 +1,70 @@
+# =========================================================
+# 接口自动化测试配置
+# 通过环境变量 ENV 切换环境: ENV=dev / ENV=prod（默认 dev）
+# 敏感账号建议放到 config.local.yaml（已 gitignore）
+# =========================================================
+
+default_env: dev
+
+# ---------- 各环境配置 ----------
+envs:
+  dev:
+    base_url: http://127.0.0.1:8080/springboot4c04d
+    timeout: 10          # 单次请求超时(秒)
+    retries: 1          # 网络层重试次数（仅对幂等 GET 生效）
+
+    account:
+      # 真实默认账号来源：PRD/技术栈与业务流程图.md 第 71-74 行
+      admin:
+        username: abo
+        password: abo
+        login_path: /users/login
+      user:
+        username: "123"
+        password: "123"
+        login_path: /yonghu/login
+      # token 在响应体里的取值路径（按实际 R 结构调整）
+      token_field: token
+
+    db:
+      host: 127.0.0.1
+      port: 3306
+      user: root
+      password: demo1234   # 来源：技术栈与业务流程图.md 第 80 行
+      database: springboot4c04d
+
+    # 统一返回 R 的字段约定（code==0 视为业务成功）
+    response:
+      code_field: code
+      msg_field: msg
+      data_field: data
+      success_code: 0
+
+  prod:
+    base_url: https://prod.example.com/springboot4c04d
+    timeout: 15
+    retries: 1
+
+    account:
+      admin:
+        username: ${PROD_ADMIN_USER}
+        password: ${PROD_ADMIN_PASS}
+        login_path: /users/login
+      user:
+        username: ${PROD_USER}
+        password: ${PROD_USER_PASS}
+        login_path: /yonghu/login
+      token_field: token
+
+    db:
+      host: ${PROD_DB_HOST}
+      port: 3306
+      user: ${PROD_DB_USER}
+      password: ${PROD_DB_PASS}
+      database: springboot4c04d
+
+    response:
+      code_field: code
+      msg_field: msg
+      data_field: data
+      success_code: 0

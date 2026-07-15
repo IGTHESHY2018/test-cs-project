@@ -1,0 +1,15 @@
+[project]
+name = "test-cs-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "allure-pytest>=2.16.0",
+    "jsonschema>=4.26.0",
+    "openpyxl>=3.1.5",
+    "pytest>=9.1.1",
+    "pytest-xdist>=3.8.0",
+    "pyyaml>=6.0.3",
+    "requests>=2.34.2",
+]

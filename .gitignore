@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# 测试报告与日志
+reports/
+logs/
+allure-results/
+*.log
+
+# 本地配置覆盖（放账号/密钥，勿提交）
+config.local.yaml
+
+# Allure 历史
+allure-history/
